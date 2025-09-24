@@ -1,38 +1,44 @@
-Role Name
-=========
+# Ansible Role: FTP (vsftpd)
 
-A brief description of the role goes here.
+이 Role은 **vsftpd** 기반의 FTP 서버를 설치하고 설정합니다.  
+`Doli2425.ftp` 로 Ansible Galaxy에서 설치할 수 있습니다.
 
-Requirements
-------------
+---
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+## 🚀 기능
+- vsftpd 패키지 설치
+- 기본 설정 파일 배포 (`templates/vsftpd.conf.j2`)
+- 허용 사용자 / chroot 리스트 관리
+- Firewalld 포트 개방 (2121, 30000-30100)
+- 서비스 활성화 및 시작
 
-Role Variables
---------------
+---
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+## 📦 요구 사항
+- 지원 OS: RHEL/CentOS 9 계열
+- 최소 Ansible 버전: 2.14 이상
 
-Dependencies
-------------
+---
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+## ⚙️ 변수 (defaults/main.yml)
 
-Example Playbook
-----------------
+| 변수명            | 기본값           | 설명                          |
+|-------------------|------------------|-------------------------------|
+| `ftp_port`        | 2121             | FTP 서비스 포트               |
+| `ftp_passive_min` | 30000            | Passive mode 최소 포트         |
+| `ftp_passive_max` | 30100            | Passive mode 최대 포트         |
+| `ftp_allowed_users` | `["ftpuser"]`  | 허용 사용자 리스트             |
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+---
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+## 📘 사용 예시
 
-License
--------
-
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+```yaml
+- hosts: ftpservers
+  become: true
+  roles:
+    - role: Doli2425.ftp
+      vars:
+        ftp_allowed_users:
+          - user1
+          - user2
